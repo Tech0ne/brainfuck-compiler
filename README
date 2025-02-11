@@ -1,0 +1,132 @@
+  ___          _      ___        _
+ | _ )_ _ __ _(_)_ _ | __|  _ __| |__
+ | _ \ '_/ _` | | ' \| _| || / _| / /
+ |___/_| \__,_|_|_||_|_| \_,_\__|_\_\
+
+---------------------------------------
+
+0x01 Introduction
+    This project contains a BrainFuck compiler / interpreter.
+    It was writen in C.
+
+0x02 Usage
+    To build that project, you will need a C compiler (GCC is recomanded).
+    - On linux, you can build it using the given Makefile:
+    Simply run 'make' and it will create a 'brainfuck' binary you can use.
+    - On Windows, the project might also work (could not test)
+    You will however need to build it manually.
+
+0x03 BrainFuck
+    Here is a quick explanation of the BrainFuck programing language.
+    It is a summary of the great Wikipedia page found here:
+        https://wikipedia.org/wiki/Brainfuck
+
+    BrainFuck is an esoteric programing language created in 1993 by Urban Müller.
+    To write it, you will only need 8 chars :
+    > : Increment the data pointer
+    < : Decrement the data pointer
+    + : Increment the data pointed by the data pointer
+    - : Decrement the data pointed by the data pointer
+    . : Display the data pointed by the data pointer
+    , : Retreive a character from STDIN and store it in the data pointed by the data pointer
+    [ : Jumps to the next ']' if the data pointed by the data pointer is equal to 0
+    ] : Jumps back to the previous '[' if the data pointed by the data pointer is not 0
+
+    Here is the C code equivalent for each instruction :
+
+    > : ptr++;
+    < : ptr--;
+    + : ++(*ptr);
+    - : --(*ptr);
+    . : putchar(*ptr);
+    , : (*ptr) = getchar();
+    [ : while(*ptr) {
+    ] : }
+
+    Based on that, here is the raw code for a "Hello World!" display:
+        ++++++++++[>+++++++>++++++++++>+++>+<<<<-]>++.>+.+++++++..+++.>++.<<+++++++++++++++.>.+++.------.--------.>+.>.
+
+    Here is the explained version :
+
+    ++++++++++                  / Set the "loop amount" to 10
+    [                           / That loop initiate the following values within the 5 first bytes :
+                                /     0x00 (0)
+                                /     0x46 (70)
+                                /     0x64 (100)
+                                /     0x1e (30)
+                                /     0x0a (10)
+                                / This will allow us to set the exact letters (H, e, l, o...) more easily
+
+        >                       / Going to the second box (index 1)
+        +++++++                 / Adding 7 (times 10, will add up at 70)
+        >                       / Going to the third box (index 2)
+        ++++++++++              / Adding 10 (times 10, will add up to 100)
+        >                       / Going to the fourth box (index 3)
+        +++                     / Adding 3
+        >                       / Going to the fifth box (index 4)
+        +                       / Adding 1
+        <<<<                    / Going back to the first box (index 0), containg our "loop counter"
+        -                       / Lowering our counter by one...
+    ]                           / ... until it's 0 (10 times)
+
+    >++                         / Add 2 to the second box (70 + 2 = 72, ascii value for 'H')
+    .                           / Display the pointed character ('H')
+    >+                          / Adding 1 to the third box (100 + 1 = 101, ascii value for 'e')
+    .                           / Display 'e'
+    +++++++                     / Adding 7 to 101 (108 in ascii = 'l')
+    .                           / Display 'l'...
+    .                           / ...twice
+    +++                         / Add 3 to 108 (111, 'o')
+    .                           / Display 'o'
+    >++                         / Add 2 to 30 (32, whitespace in ascii)
+    .                           / Display the whitespace
+    <<                          / Go back to box at index 1
+    +++++++++++++++             / Add 15 to 72 => 87, 'W'
+    .                           / 'W'
+    >                           / Go back to box at index 2
+    .                           / Display 'o' again
+    +++                         / Add 3 (114, 'r')
+    .                           / 'r'
+    ------                      / 114 - 6 = 108, 'l'
+    .                           / 'l'
+    --------                    / 108 - 8 = 100, 'd'
+    .                           / 'd'
+    >                           / Go back to box at index 3
+    +                           / 32 + 1 = 33, '!'
+    .                           / '!'
+    >                           / Go to box 4
+    .                           / Print the '\n' character, new line character (ascii 10)
+
+    Not that hard, right ?
+    Note: In original BrainFuck, the / (comment) character doesn't exist.
+      Comments are originally handled as "if it's not any of <>+-.,[] it's a comment".
+      This limits the hability you have inside of comments.
+      That's why, in that version, everything after a '/', until a new line will be contidered a comment.
+
+0x04 Implementation
+    That implementation of the BrainFuck programing language have some specificities.
+    First of all, the comment system.
+    As stated in the section 0x03, every character other than <>+-.,[] will be considered a comment.
+    Also, if you put a /, the rest of the line will be ignored (until a new line).
+
+    You should also note that, due to how that implementation works, both the number of boxes, and the size of them isn't infinite.
+    The value of boxes is between 0 and 255.
+    As that language is close to assembly, that shouldn't come as a surprise: Each box is stored inside an unsigned char (a byte).
+    The max number of boxes is defined within the ./hdr/configs.h file, as a #define MAX_BOXES 1024.
+    Note: Reading/Writing on boxes outside that range WILL end up badly.
+      This is note handled by any of the interpreter/compiler.
+      That code is NOT self secure, and should not be open to unauthorised users.
+
+0x05 Contributing
+    Feel free to open pull requests for any ideas or implementations you could have.
+
+0x06 License
+    Feel free to find the License within the LICENSE file at the root of that repository
+
+0x07 Footer
+    The provided code is memory free: it does not allocate anything on the heap.
+    This helps in case of:
+      - A crash (nothing is kept hostage from the kernel)
+      - Bad coding (You can't "break" a machine by running that process again and again)
+    Also note: For some obscure reason, the project seems poorly optimised.
+    I can't really dive into it for the moment, so feel free to open a pull request if you find the origin of that.
