@@ -25,7 +25,7 @@ CPPFLAGS		?=	-D_GNU_SOURCE -I$(HDR_DIR)
 
 DEBUG_FLAGS		=	-O3 -g3
 
-PHONY:	all
+.PHONY:	all
 all:	$(BIN)
 
 .PHONY: dev
