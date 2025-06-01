@@ -32,7 +32,7 @@ int display_help(const char* filename, int error_code)
     f_display("  "GREEN, STDOUT_FILENO);
     f_display(filename, STDOUT_FILENO);
     f_display(" -o \"./some_display.c\" -c \"++++++++[>+++++++++<-]>.<++++++++++.\""WHITE, STDOUT_FILENO);
-    f_display(WHITE"\nThat command will first compile the given code into a \""RED"./some_display.c"WHITE"\" file, and then execute the code contained within \""RED"./source_code.bf"WHITE"\"\n", STDOUT_FILENO);
+    f_display(WHITE"\nThat command will compile the given code into a \""RED"./some_display.c"WHITE"\" file\n", STDOUT_FILENO);
     f_display("Feel free to check out the associated "YELLOW"README"WHITE" file for more explanations on how BrainFuck works\n", STDOUT_FILENO);
 
     return error_code;
