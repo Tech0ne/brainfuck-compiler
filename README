@@ -109,7 +109,7 @@
     As stated in the section 0x03, every character other than <>+-.,[] will be considered a comment.
     Also, if you put a /, the rest of the line will be ignored (until a new line).
 
-    You should also note that, due to how that implementation works, both the number of boxes, and the size of them isn't infinite.
+    You should also note that, due to how that implementation works, both the number of boxes, and the size of them are finite.
     The value of boxes is between 0 and 255.
     As that language is close to assembly, that shouldn't come as a surprise: Each box is stored inside an unsigned char (a byte).
     The max number of boxes is defined within the ./hdr/configs.h file, as a #define MAX_BOXES 1024.
